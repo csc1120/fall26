@@ -5,9 +5,9 @@
  * Name: Sean Jones
  * Last Updated:
  */
-package week1.section111;
+package week1.section121;
 
-public class NotEnoughTicketsException extends RuntimeException {
+public class NotEnoughTicketsException extends IllegalArgumentException {
     public NotEnoughTicketsException(String message) {
         super(message);
     }

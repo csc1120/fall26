@@ -5,20 +5,20 @@
  * Name: Sean Jones
  * Last Updated:
  */
-package week1.section111;
+package week1.section121;
 
 public class TicketDemo {
     private static final int TICKETS_AVAILABLE = 10;
     static void main() {
         TicketOffice office = new TicketOffice(TICKETS_AVAILABLE);
         try {
-            double cost = office.buyTickets("34", "student");
+            final double cost = office.buyTickets("34", "student");
             System.out.println("Cost: $" + cost);
         } catch(NumberFormatException e) {
-            System.out.println("The ticket quantity must be a number");
-        } catch(IllegalArgumentException e) {
+            System.out.println("Quantity needs to be a number");
+        } catch(NotEnoughTicketsException e) {
             System.out.println(e.getMessage());
-        } catch (NotEnoughTicketsException e) {
+        } catch(IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }

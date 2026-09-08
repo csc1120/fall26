@@ -5,7 +5,7 @@
  * Name: Sean Jones
  * Last Updated:
  */
-package week1.section111;
+package week1.section121;
 
 public class TicketOffice {
     private int ticketsAvailable;
@@ -15,10 +15,9 @@ public class TicketOffice {
     }
 
     public double buyTickets(String quantityText, String ticketType)
-        throws NotEnoughTicketsException {
+            throws NotEnoughTicketsException {
         final double studentPrice = 8.00;
         final double adultPrice = 12.00;
-
         final int quantity = Integer.parseInt(quantityText);
         final double price;
 
@@ -31,10 +30,10 @@ public class TicketOffice {
         }
 
         if(quantity > ticketsAvailable) {
-            throw new NotEnoughTicketsException("Only " + ticketsAvailable + " tickets remaining");
+            throw new NotEnoughTicketsException("Only " + ticketsAvailable + " tickets left.");
         }
+
         ticketsAvailable -= quantity;
         return price * quantity;
-
     }
 }
