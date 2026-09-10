@@ -24,6 +24,7 @@ public class TextFileIO {
         file = path.toFile();
         path = file.toPath();
 //        System.out.println(file.length());
+        // 5.421687
 //        Scanner in = null;
 //        try {
 //            in = new Scanner(file);
