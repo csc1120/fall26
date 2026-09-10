@@ -52,5 +52,9 @@ public class MoreFileIO {
         } catch(ClassNotFoundException e) {
             System.out.println("wrong file");
         }
+
+        // 3.1415924552532535 <- 17 char = 17 * 2 = 34 bytes
+        // double == 8 bytes
+        // 412
     }
 }
