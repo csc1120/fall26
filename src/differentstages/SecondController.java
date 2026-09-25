@@ -1,4 +1,4 @@
-package differentStages;
+package differentstages;
 
 public class SecondController {
 

@@ -1,4 +1,8 @@
-package differentStages;
+/*
+ * Course: CSC-1020
+ * Different Stages example
+ */
+package differentstages;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,6 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Example of using two stages.
+ */
 public class Main extends Application {
 
     @Override
@@ -32,16 +39,12 @@ public class Main extends Application {
         stage2.setTitle("Second Window");
         stage2.setX(startingX);
         stage2.setY(startingY + height);
+        stage2.setScene(new Scene(root2));
 
         // Get the controller and make 'em talk
         Controller controller = loader.getController();
         controller.setStage(stage2);
 
         primaryStage.show();
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
