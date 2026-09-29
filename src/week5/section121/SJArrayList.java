@@ -51,7 +51,9 @@ public class SJArrayList<E> implements List<E> {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] result = new Object[this.size];
+        System.arraycopy(this.data, 0, result, 0, this.size);
+        return result;
     }
 
     @Override
@@ -80,7 +82,21 @@ public class SJArrayList<E> implements List<E> {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(Object o) { // O()
+        // find object
+        for (int i = 0; i < this.size; i++) {
+            if(this.data[i].equals(o)) {
+                // remove
+                // shift remaining indexes to the left
+                for(int j = i + 1; j < this.size; ++j) {
+                    // copy left
+                    this.data[j - 1] = this.data[j];
+                }
+                --this.size;
+                return true;
+            }
+        }
+        // if object doesn't exist
         return false;
     }
 
@@ -111,27 +127,58 @@ public class SJArrayList<E> implements List<E> {
 
     @Override
     public void clear() {
-
+        this.size = 0;
     }
 
     @Override
-    public E get(int index) {
-        return null;
+    public E get(int index) { // random access O(1)
+        // validate index
+        validateIndex(index);
+        return this.data[index];
+    }
+
+    private void validateIndex(int index) {
+        if(index < 0 || index >= this.size) {
+            throw new IndexOutOfBoundsException("Size: " + this.size + " Index: " + index);
+        }
     }
 
     @Override
-    public E set(int index, E element) {
-        return null;
+    public E set(int index, E element) { // O(1)
+        validateIndex(index);
+        E old = this.data[index];
+        this.data[index] = element;
+        return old;
     }
 
     @Override
-    public void add(int index, E element) {
-
+    public void add(int index, E element) { // O(n)
+        if(index < 0 || index > this.size) {
+            throw new IndexOutOfBoundsException("Size: " + this.size + " Index: " + index);
+        }
+        if(this.size == this.data.length) {
+            reallocate();
+        }
+        // move stuff over
+        for(int i = this.size - 1; i >= index; --i) {
+            this.data[i + 1] = this.data[i];
+        }
+        // add element
+        this.data[index] = element;
+        ++this.size;
     }
 
     @Override
     public E remove(int index) {
-        return null;
+        validateIndex(index);
+        // store old value
+        E result = this.data[index];
+        // shift stuff over
+        for(int i = index + 1; i < this.size; ++i) {
+            this.data[i - 1] = this.data[i];
+        }
+        --this.size;
+        return result;
     }
 
     @Override

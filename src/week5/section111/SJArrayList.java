@@ -81,7 +81,18 @@ public class SJArrayList<E> implements List<E>  {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(Object o) { // O(n)
+        for (int i = 0; i < this.size; i++) {
+            if(data[i].equals(o)) {
+                // found it
+                // remove it
+                for (int j = i + 1; j < this.size; j++) { // close the gap
+                    data[j - 1] = data[j];
+                }
+                --this.size;
+                return true;
+            }
+        }
         return false;
     }
 
@@ -112,27 +123,62 @@ public class SJArrayList<E> implements List<E>  {
 
     @Override
     public void clear() {
-
+        this.size = 0;
     }
 
     @Override
-    public E get(int index) {
-        return null;
+    public E get(int index) { // O(1) - random access
+        validateIndex(index);
+        return this.data[index];
     }
 
     @Override
-    public E set(int index, E element) {
-        return null;
+    public E set(int index, E element) { // O(1)
+        // validate index
+        validateIndex(index);
+        // get the old value
+        E old = this.data[index];
+        // replace old value with element
+        this.data[index] = element;
+        // return old value
+        return old;
     }
 
     @Override
-    public void add(int index, E element) {
-
+    public void add(int index, E element) { // O(n)
+        if(index > this.size || index < 0) {
+            throw new IndexOutOfBoundsException("List size: " + this.size + " index: " + index);
+        }
+        if(this.size == this.data.length) {
+            reallocate();
+        }
+        // add at index or insert
+        // make a gap at index
+        for(int i = this.size - 1; i >= index; --i) {
+            this.data[i + 1] = this.data[i];
+        }
+        // insert element at index
+        this.data[index] = element;
+        ++this.size;
     }
 
     @Override
-    public E remove(int index) {
-        return null;
+    public E remove(int index) { // O(n)
+        validateIndex(index);
+        // remove and close the gap
+        E result = this.data[index];
+        // shift elements over
+        for(int i = index + 1; i < this.size; ++i) {
+            this.data[i - 1] = this.data[i];
+        }
+        --this.size;
+        return result;
+    }
+
+    private void validateIndex(int index) {
+        if(index >= this.size || index < 0) {
+            throw new IndexOutOfBoundsException("List size: " + this.size + " index: " + index);
+        }
     }
 
     @Override
