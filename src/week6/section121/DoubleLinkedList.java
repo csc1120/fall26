@@ -5,7 +5,7 @@
  * Name: Sean Jones
  * Last Updated:
  */
-package week6.section111;
+package week6.section121;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -79,11 +79,12 @@ public class DoubleLinkedList<E> implements List<E> {
             if(this.next == null) {
                 throw new NoSuchElementException();
             }
+            E result = this.next.data;
+            // upkeep
             this.lastReturned = this.next;
-            E value = this.next.data;
             this.next = this.next.next;
             ++this.nextIndex;
-            return value;
+            return result;
         }
 
         /**
@@ -113,8 +114,11 @@ public class DoubleLinkedList<E> implements List<E> {
             if(this.lastReturned == null) {
                 throw new IllegalStateException();
             }
+            // update index
             --this.nextIndex;
+            // remove node
             DoubleLinkedList.this.remove(this.nextIndex);
+            // delete LR
             this.lastReturned = null;
         }
     }
@@ -359,6 +363,7 @@ public class DoubleLinkedList<E> implements List<E> {
 
     @Override
     public String toString() {
+        // [1, 2, 3, 4]
 //        StringBuilder sb = new StringBuilder();
         StringJoiner sj = new StringJoiner(", ", "[", "]");
         Node<E> current = this.head;
