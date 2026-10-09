@@ -155,7 +155,7 @@ public class DoubleLinkedList<E> implements List<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public @NotNull Iterator<E> iterator() {
         return new SJIterator();
     }
 
@@ -359,7 +359,7 @@ public class DoubleLinkedList<E> implements List<E> {
 
     @Override
     public String toString() {
-//        StringBuilder sb = new StringBuilder();
+        // StringBuilder sb = new StringBuilder();
         StringJoiner sj = new StringJoiner(", ", "[", "]");
         Node<E> current = this.head;
         while(current != null) {
