@@ -45,35 +45,29 @@ public class DoubleLinkedList<E> implements List<E> {
         }
     }
 
-    private final class SJIterator implements Iterator<E> {
+    private final class ListIter implements ListIterator<E> {
         private Node<E> next;
         private Node<E> lastReturned;
         private int nextIndex;
 
-        private SJIterator() {
-            this.next = head;
-            this.lastReturned = null;
-            this.nextIndex = 0;
+        private ListIter(int index) { // O(n)
+            if(index < 0 || index > size) {
+                throw new IndexOutOfBoundsException();
+            }
+            if(index == size) {
+                next = null;
+            } else {
+                this.next = getNode(index);
+            }
+            lastReturned = null;
+            this.nextIndex = index;
         }
 
-        /**
-         * Returns {@code true} if the iteration has more elements.
-         * (In other words, returns {@code true} if {@link #next} would
-         * return an element rather than throwing an exception.)
-         *
-         * @return {@code true} if the iteration has more elements
-         */
         @Override
         public boolean hasNext() {
             return this.next != null;
         }
 
-        /**
-         * Returns the next element in the iteration.
-         *
-         * @return the next element in the iteration
-         * @throws NoSuchElementException if the iteration has no more elements
-         */
         @Override
         public E next() {
             if(this.next == null) {
@@ -86,28 +80,6 @@ public class DoubleLinkedList<E> implements List<E> {
             return value;
         }
 
-        /**
-         * Removes from the underlying collection the last element returned
-         * by this iterator (optional operation).  This method can be called
-         * only once per call to {@link #next}.
-         * <p>
-         * The behavior of an iterator is unspecified if the underlying collection
-         * is modified while the iteration is in progress in any way other than by
-         * calling this method, unless an overriding class has specified a
-         * concurrent modification policy.
-         * <p>
-         * The behavior of an iterator is unspecified if this method is called
-         * after a call to the {@link #forEachRemaining forEachRemaining} method.
-         *
-         * @throws UnsupportedOperationException if the {@code remove}
-         *                                       operation is not supported by this iterator
-         * @throws IllegalStateException         if the {@code next} method has not
-         *                                       yet been called, or the {@code remove} method has already
-         *                                       been called after the last call to the {@code next}
-         *                                       method
-         * @implSpec The default implementation throws an instance of
-         * {@link UnsupportedOperationException} and performs no other action.
-         */
         @Override
         public void remove() {
             if(this.lastReturned == null) {
@@ -117,7 +89,92 @@ public class DoubleLinkedList<E> implements List<E> {
             DoubleLinkedList.this.remove(this.nextIndex);
             this.lastReturned = null;
         }
+
+        @Override
+        public boolean hasPrevious() {
+            return this.nextIndex > 0;
+        }
+
+        @Override
+        public E previous() {
+            if(nextIndex == 0) {
+                throw new NoSuchElementException();
+            }
+            if(this.next == null) {
+                // at the end, use tail
+                this.next = tail;
+            } else {
+                this.next = this.next.prev;
+            }
+            this.lastReturned = this.next;
+            --this.nextIndex;
+            return this.lastReturned.data;
+        }
+
+        @Override
+        public int nextIndex() {
+            return this.nextIndex;
+        }
+
+        @Override
+        public int previousIndex() {
+            return this.nextIndex - 1;
+        }
+
+        @Override
+        public void set(E e) {
+            if(this.lastReturned == null) {
+                throw new IllegalStateException();
+            }
+            this.lastReturned.data = e;
+        }
+
+        @Override
+        public void add(E e) {
+            DoubleLinkedList.this.add(nextIndex, e);
+            ++this.nextIndex;
+            this.lastReturned = null;
+        }
     }
+
+//    private final class SJIterator implements Iterator<E> {
+//        private Node<E> next;
+//        private Node<E> lastReturned;
+//        private int nextIndex;
+//
+//        private SJIterator() {
+//            this.next = head;
+//            this.lastReturned = null;
+//            this.nextIndex = 0;
+//        }
+//
+//        @Override
+//        public boolean hasNext() {
+//            return this.next != null;
+//        }
+//
+//        @Override
+//        public E next() {
+//            if(this.next == null) {
+//                throw new NoSuchElementException();
+//            }
+//            this.lastReturned = this.next;
+//            E value = this.next.data;
+//            this.next = this.next.next;
+//            ++this.nextIndex;
+//            return value;
+//        }
+//
+//        @Override
+//        public void remove() {
+//            if(this.lastReturned == null) {
+//                throw new IllegalStateException();
+//            }
+//            --this.nextIndex;
+//            DoubleLinkedList.this.remove(this.nextIndex);
+//            this.lastReturned = null;
+//        }
+//    }
 
     private Node<E> head;
     private Node<E> tail;
@@ -156,7 +213,7 @@ public class DoubleLinkedList<E> implements List<E> {
 
     @Override
     public @NotNull Iterator<E> iterator() {
-        return new SJIterator();
+        return new ListIter(0);
     }
 
     @Override
@@ -344,12 +401,12 @@ public class DoubleLinkedList<E> implements List<E> {
 
     @Override
     public ListIterator<E> listIterator() {
-        return null;
+        return new ListIter(0);
     }
 
     @Override
     public ListIterator<E> listIterator(int index) {
-        return null;
+        return new ListIter(index);
     }
 
     @Override
