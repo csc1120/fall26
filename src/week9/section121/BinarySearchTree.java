@@ -7,20 +7,95 @@
  */
 package week9.section121;
 
-public class BinarySearchTree {
+public class BinarySearchTree<E extends Comparable<E>>
+    extends BinaryTree<E> implements SearchTree<E> {
+    private boolean addReturn;
+
+    public BinarySearchTree() {
+        super();
+    }
 
 
+    @Override
+    public boolean add(E item) {
+        addReturn = false;
+        this.root = add(item, this.root);
+        return addReturn;
+    }
 
+    private Node<E> add(E item, Node<E> node) {
+        // base
+        // null
+        if(node == null) {
+            // found it, add it
+            addReturn = true;
+            return new Node<>(item);
+        }
+        // not empty compare
+        int compare = item.compareTo(node.data);
+        if(compare < 0) {
+            // go left
+            node.left = add(item, node.left);
+        }
+        if(compare > 0){
+            node.right = add(item, node.right);
+        }
+        return node;
+    }
 
+    @Override
+    public boolean contains(E target) {
+        return find(target) != null;
+    }
 
+    @Override
+    public E find(E target) {
+        return find(target, this.root);
+    }
 
+    private E find(E target, Node<E> node) {
+        if(node == null) {
+            return null;
+        }
+        int compare = target.compareTo(node.data);
+        if(compare == 0) {
+            return node.data;
+        }
+        if(compare < 0) {
+            return find(target, node.left);
+        }
+        return find(target, node.right);
+    }
 
+    @Override
+    public E delete(E target) {
+        this.root = delete(target, this.root);
+        return null;
+    }
 
+    private Node<E> delete(E target, Node<E> node) {
+        if(node == null) {
+            return node;
+        }
+        int compare = target.compareTo(node.data);
+        if(compare < 0) {
+            node.left = delete(target, node.left);
+        } else if (compare > 0) {
+            node.right = delete(target, node.right);
+        } else {
+            // found it
+            // leaf?
 
+            // one child? left or right?
 
+            // two children?
+        }
+    }
 
-
-
+    @Override
+    public boolean remove(E target) {
+        return false;
+    }
 
     @Override
     public String toString() {

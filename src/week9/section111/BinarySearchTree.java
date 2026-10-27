@@ -7,16 +7,81 @@
  */
 package week9.section111;
 
-public class BinarySearchTree {
+public class BinarySearchTree<E extends Comparable<E>>
+        extends BinaryTree<E> implements SearchTree<E> {
+    private boolean addReturn;
 
+    public BinarySearchTree() {
+        super();
+    }
 
+    @Override
+    public boolean add(E item) {
+        this.root = add(item, this.root);
+        return addReturn;
+    }
 
+    private Node<E> add(E item, Node<E> node) {
+        this.addReturn = false;
+        // base cases
+        // node is null
+        if(node == null) {
+            // found my spot
+            this.addReturn = true;
+            return new Node<>(item);
+        }
+        // duplicate value
+        int compare = item.compareTo(node.data);
+        // recursive calls
+        // item is less than node data
+        if(compare < 0) {
+            // item is less, go left
+            node.left = add(item, node.left);
+            // item is greater than nodes data
+        }
+        if(compare > 0) {
+            // item is larger, go right
+            node.right = add(item, node.right);
+        }
+        return node;
 
+    }
 
+    @Override
+    public boolean contains(E target) {
+        return find(target) != null;
+    }
 
+    @Override
+    public E find(E target) {
+        return find(target, this.root);
+    }
 
+    private E find(E target, Node<E> node) {
+        if(node == null) {
+            return null;
+        }
+        int compare = target.compareTo(node.data);
+        // equal == done
+        if(compare == 0) {
+            return node.data;
+        }
+        if(compare < 0) {
+            // go left
+            return find(target, node.left);
+        }
+        return find(target, node.right);
+    }
 
+    @Override
+    public E delete(E target) {
+        return null;
+    }
 
+    @Override
+    public boolean remove(E target) {
+        return false;
+    }
 
     @Override
     public String toString() {
