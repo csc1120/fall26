@@ -10,6 +10,7 @@ package week9.section121;
 public class BinarySearchTree<E extends Comparable<E>>
     extends BinaryTree<E> implements SearchTree<E> {
     private boolean addReturn;
+    private E deleteReturn;
 
     public BinarySearchTree() {
         super();
@@ -69,28 +70,58 @@ public class BinarySearchTree<E extends Comparable<E>>
 
     @Override
     public E delete(E target) {
+        deleteReturn = null;
         this.root = delete(target, this.root);
-        return null;
+        return deleteReturn;
     }
 
     private Node<E> delete(E target, Node<E> node) {
+        // base
         if(node == null) {
-            return node;
+            return null;
         }
         int compare = target.compareTo(node.data);
+        // recursive
         if(compare < 0) {
             node.left = delete(target, node.left);
-        } else if (compare > 0) {
+        } else if(compare > 0) {
             node.right = delete(target, node.right);
         } else {
             // found it
-            // leaf?
+            deleteReturn = node.data;
+            // delete it
+            // 3 or 4 possibilities
+            if(node.left == null) { // leaf or right child
+                return node.right;
+            }
+            if(node.right == null) {
+                return node.left;
+            }
+            // two children
+            // go to left subtree, get largest child
+            if(node.left.right == null) { // if subtree root is largest
+                node.data = node.left.data;
+                node.left = node.left.left;
+            } else {
+                node.data = findAndReplaceLargetChild(node.left);
+            }
+        }
+        return node;
+    }
 
-            // one child? left or right?
-
-            // two children?
+    private E findAndReplaceLargetChild(Node<E> node) {
+        if(node.right.right == null) {
+            E result = node.right.data;
+            // delete largest child
+            node.right = node.right.left;
+            return result;
+        } else {
+            return findAndReplaceLargetChild(node.right);
         }
     }
+
+
+
 
     @Override
     public boolean remove(E target) {

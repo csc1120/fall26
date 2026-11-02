@@ -10,6 +10,7 @@ package week9.section111;
 public class BinarySearchTree<E extends Comparable<E>>
         extends BinaryTree<E> implements SearchTree<E> {
     private boolean addReturn;
+    private E deleteReturn;
 
     public BinarySearchTree() {
         super();
@@ -75,12 +76,61 @@ public class BinarySearchTree<E extends Comparable<E>>
 
     @Override
     public E delete(E target) {
-        return null;
+        deleteReturn = null;
+        this.root = delete(target, this.root);
+        return deleteReturn;
+    }
+
+    private Node<E> delete(E target, Node<E> node) {
+        // base case
+        if(node == null) {
+            return null;
+        }
+        int compare = target.compareTo(node.data);
+        // recursive case
+        if(compare < 0) {
+            node.left = delete(target, node.left);
+        } else if(compare > 0) {
+            node.right = delete(target, node.right);
+        } else {
+            deleteReturn = node.data;
+            // found it
+            // 3 cases (really 4)
+            // leaf node?
+            if(node.left == null) {
+                return node.right;
+            }
+            // if only left node
+            if(node.right == null) {
+                return node.left;
+            }
+            // two children
+            if(node.left.right == null) {
+                node.data = node.left.data;
+                node.left = node.left.left;
+            } else {
+                node.data = findAndReplaceLargestChild(node.left);
+            }
+        }
+        return node;
+    }
+
+    private E findAndReplaceLargestChild(Node<E> node) {
+        // go right, and keep going right
+        if(node.right.right == null) {
+            // right child is largest
+            E result = node.right.data;
+            node.right = node.right.left;
+            return result;
+        } else {
+            // keep going
+            return findAndReplaceLargestChild(node.right);
+        }
     }
 
     @Override
     public boolean remove(E target) {
-        return false;
+        return delete(target) != null;
     }
 
     @Override
